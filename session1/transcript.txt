@@ -1,0 +1,140 @@
+#
+# Transcript for Swift Usage Workshop, Session 1: Basics
+#
+
+# Discuss the Swift API
+# * 3 resource types:  account, container, object 
+# * Major HTTP verbs:  HEAD, GET, PUT, POST, etc.
+
+# set the hostname
+export ST_HOST=http://<SWIFT_HOST> 
+
+# Try to access the cluster via curl, get denied
+
+curl -v $ST_HOST/v1/AUTH_alice/
+
+# Discuss the v1 auth model:
+# * Known auth endpoint
+# * Supply credentials, get back token and storage url
+# * Discuss multiple auth systems
+
+# Configure accounts
+# (Use the Controller to create 3 user/passwords:  alice/testing, bob/testing, super/user)
+
+# Access cluster using curl
+
+curl -v -H 'X-Auth-User: alice' -H 'X-Auth-Key: testing' $ST_HOST/auth/v1.0/
+# Discuss fields
+
+export TK_ALICE=<AUTH_TOKEN>
+
+curl --head -H "X-Auth-Token: $TK_ALICE" $ST_HOST/v1/AUTH_alice
+# Discuss fields
+
+# Access cluster using swift client
+# Notice a difference -- no storage url specified
+swift -U alice -K testing -A $ST_HOST/auth/v1.0/ stat
+
+# Now set environment variables for brevity in the future
+cat env/be_alice.sh
+. env/be_alice.sh
+env | grep ST_
+
+swift stat
+
+# Discuss swift CLI terms / translation to Swift API operations
+
+# Roughly:
+# * stat == HEAD on any resource
+# * list == GET on account or container 
+# * post == POST on any resource; updates metadata
+# * upload == PUT on an object
+# * download == GET on object
+# * delete == DELETE on object
+# * Though this often translates into multiple commands behind the scenes
+
+# Create some containers
+
+swift post public
+swift post company
+
+# Stat account again; observe container count; view list of containers
+swift stat
+swift list
+
+# Upload files, list them
+
+swift upload public data/images/set1/*
+
+swift list public
+swift stat public
+swift stat              # object count may or may not be updated at this time!
+
+# Download a file
+
+swift stat public data/images/set1/img1.jpg
+swift download public data/images/set1/img1.jpg -o img1.jpg
+rm img1.jpg
+
+# Delete a file
+
+swift delete public data/images/set1/img1.jpg
+swift stat public data/images/set1/img1.jpg
+
+# Change file metadata
+
+swift post public data/images/set1/img2.jpg -m Priority:Critical
+swift stat public data/images/set1/img2.jpg
+
+# Note that the swift client isn't showing you the full header name here
+curl --head -H "X-Auth-Token: $TK_ALICE" $ST_HOST/v1/AUTH_alice/public/data/images/set1/img2.jpg
+
+# ACLs 
+
+# let's upload something to company as alice
+
+swift upload company data/fonts/*
+swift list public
+
+# If we try to access alice's data as bob, we get a 403
+
+curl -v -H 'X-Auth-User: bob' -H 'X-Auth-Key: testing' $ST_HOST/auth/v1.0/
+export TK_BOB=<AUTH_TOKEN>
+curl --head -H "X-Auth-Token: $TK_BOB" $ST_HOST/v1/AUTH_bob
+curl --head -H "X-Auth-Token: $TK_BOB" $ST_HOST/v1/AUTH_alice/company
+
+# How do we even do this using the swift CLI?
+. env/be_bob.sh
+swift list company --os-storage-url=$ST_HOST/v1/AUTH_alice 
+
+# But we can explicitly give bob access to a container if we want to
+. env/be_alice.sh
+swift post -r 'bob' company
+
+. env/be_bob.sh
+swift list company --os-storage-url=$ST_HOST/v1/AUTH_alice 
+
+# We can also make the public container completely public
+. env/be_alice.sh
+swift post -r '.r:*,.rlistings' public
+curl $ST_HOST/v1/AUTH_alice/public
+
+# Brief overview of some additional features
+
+# large-file upload
+# if you had a file named 'backup.zip'... this would break the object into 5GB chunks
+swift upload --segment-size=5000000000 backups backup.zip
+
+# save versions
+swift post public -m X-Versions-Location:public_versions
+
+# expiring objects
+
+# Set a time-to-live when uploading
+# 3600 seconds == 1 hour
+swift upload public data/images/set1/img1.jpg -m X-Delete-After: 3600
+
+# Set an calendar time when the object expires
+# 872838840 == 2:14 AM EST on August 29th, 1997
+swift post public data/images/set1/img2.jpg X-Delete-At: 872838840
+
