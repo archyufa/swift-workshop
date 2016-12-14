@@ -7,18 +7,20 @@ Swift Workshop
 This session covers following topics:
 
 * Swift Authentication
-* Swfit Authorization
-* Basic CRUD Commands
+* Basic CRUD Commands with CLI, API
+* Swit Authorization
+* UI Tools accessing swift.
+
 
 ##Session 2
 This session covers following topics:
 
-* Swift Features
+* Swift Advanced Features
 
 ##Session 3
 This session covers following topics:
 
-* Swift Installation
+* Manual Swift Installation and Configuration
 
 ##Session 4
 This session covers following topics:
