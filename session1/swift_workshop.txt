@@ -1,3 +1,14 @@
+Quick not: swift CLI terms / translation to Swift API operations
+
+# Roughly:
+# * stat == HEAD on any resource
+# * list == GET on account or container-
+# * post == POST on any resource; updates metadata
+# * upload == PUT on an object
+# * download == GET on object
+# * delete == DELETE on object
+# * Though this often translates into multiple commands behind the scenes
+
 Step 1 Create openrc file with V1 auth
 
 vim openrc
