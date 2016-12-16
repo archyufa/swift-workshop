@@ -1,10 +1,10 @@
 Step 1 Create openrc file with V1 auth
 
-```vim openrc
+vim openrc
 export ST_USER=user
 export ST_KEY=password
 #Check in the SwiftStack Console
-export ST_AUTH=http://$IP/auth/v1.0```
+export ST_AUTH=http://$IP/auth/v1.0
 
 Step 2 Source the environment file to set environment variables for your
 current shell:
@@ -14,11 +14,11 @@ Step 3 See what commands are available with swift client and what options are
 available for the subcommand that will upload the file. Note that swift client
 has a little different syntax than other OpenStack command-line clients:
 
-```stack@vlab-XX:~$ swift --help
-stack@vlab-XX:~$ swift upload --help```
+stack@vlab-XX:~$ swift --help
+stack@vlab-XX:~$ swift upload --help
 Step 4 Get the summary information for the demo account:
 
-```stack@vlab-XX:~$ swift stat
+stack@vlab-XX:~$ swift stat
        Account: AUTH_4552c149d0ae4593b3156645515a9f3e
     Containers: 0
        Objects: 0
@@ -26,7 +26,7 @@ Step 4 Get the summary information for the demo account:
 X-Put-Timestamp: 1450727192.16803
    X-Timestamp: 1450727192.16803
     X-Trans-Id: tx18c6ecf2fc334fee91cb9-00540f9c06
-  Content-Type: text/plain; charset=utf-8```
+  Content-Type: text/plain; charset=utf-8
 
 In the Object Storage, the project is called “account”. The demo project has
 no objects or storage containers (directories) yet.
@@ -34,8 +34,8 @@ no objects or storage containers (directories) yet.
 Step 5 Create a storage container with the wokrshop name, and then verify that
 it was created:
 
-```
-stack@vlab-XX:~$ swift post wokrshop```
+
+stack@vlab-XX:~$ swift post wokrshop
 
 stack@vlab-XX:~$ swift list
 wokrshop
@@ -54,19 +54,19 @@ stack@vlab-XX:~$ swift stat wokrshop
    X-Timestamp: 1410309421.05357
     X-Trans-Id: txf747fb156e704833a942c-00540f9d50
   Content-Type: text/html; charset=UTF-8
-```
+
 
 We are going to upload several files into the wokrshop container.
 
 Step 6 Look at the files available for upload:
 
-```stack@vlab-XX:~$ cd workshop_files
+stack@vlab-XX:~$ cd workshop_files
 stack@vlab-XX:~$ ls
 test.doc
 test.jpg
 test.mov
 test.xls
-```
+
 
 All the files for upload are less than 5 GB, so they can be uploaded as single
 objects.
@@ -74,13 +74,13 @@ objects.
 Step 7 Upload the test.jpg file to the wokrshop container, and then look at
 the information for the created object:
 
-```stack@vlab-XX:~$ swift upload --object-name test.jpg wokrshop test.jpg
+stack@vlab-XX:~$ swift upload --object-name test.jpg wokrshop test.jpg
 test.jpg
 
 stack@vlab-XX:~$ swift list wokrshop
 test.jpg
 
-```
+
 stack@vlab-XX:~$ swift stat --lh wokrshop test.jpg
        Account: AUTH_4552c149d0ae4593b3156645515a9f3e
      Container: wokrshop
@@ -96,11 +96,11 @@ Content Length: 12K
 Note, that the Object Storage automatically populated the Content Type
 property with image/jpeg. This information is taken from the object name
 specified in the command.
-```
+
 
 Step 8 Upload the same file with a different name:
 
-```
+
 stack@vlab-XX:~$ swift upload --object-name test2 \
                  wokrshop test.jpg
 test2
@@ -118,44 +118,44 @@ Content Length: 12K
         Server: Apache/2.4.7 (Ubuntu)
    X-Timestamp: 1410313175.57550
     X-Trans-Id: tx73d4b236948543c6a1200-00540fabe0
-```
+
 You can see that the Content Type value is now different. The ETag value is
 the md5sum value for the file.
 
 Step 9 Calculate the md5sum value for the test.jpg file and compare it with
 the ETag value for the upload test.jpg object:
 
-```
+
 stack@vlab-XX:~$ md5sum test.jpg
 6b154f05bc17cf39a481946b3eeb86a4  test.jpg
-```
+
 
 Try uploading test.doc and “path:test.xls to wokrshop container.
 
 Step 10 Download the test.jpg object and verify its md5sum value:
 
 
-```
+
 stack@vlab-XX:~$ swift download wokrshop test.jpg
 test.jpg [auth 0.306s, headers 0.386s, total 0.387s, 0.161 MB/s]
-```
 
-```
+
+
 stack@vlab-XX:~$ ls -l test.jpg
 -rw-rw-r-- 1 stack stack 12965 Dec  15 17:06 test.jpg
-```
 
-```
+
+
 stack@vlab-XX:~$ md5sum test.jpg
 6b154f05bc17cf39a481946b3eeb86a4  test.jpg
-```
+
 
 Run swift download --help command to find more optional arguments for
 downloading objects with swift client.
 
 Step 11 Add metadata to the test.jpg object:
 
-```
+
 stack@vlab-XX:~$ swift post --meta Genre:Comedy wokrshop test.jpg
 
 stack@vlab-XX:~$ swift stat wokrshop test.jpg
@@ -171,11 +171,11 @@ Content Length: 12965
         Server: Apache/2.4.7 (Ubuntu)
    X-Timestamp: 1410314004.32607
     X-Trans-Id: txba16ba6db8ba4ae3af22b-00540faf1e
-```
+
 
 Step 12 Add metadata to the wokrshop container and look if the information on
 both container and object has changed:
-```
+
  stack@vlab-XX:~$ swift post --meta Color:Blue wokrshop
 
  stack@vlab-XX:~$ swift stat wokrshop
@@ -208,14 +208,14 @@ stack@vlab-XX:~$ swift stat wokrshop test.jpg
       X-Trans-Id: tx8420c8bd58584f1f81507-00540fafb4
 As you can see, the container metadata doesn’t get propagated to all of the
 objects in this container.
-```
+
 
 Step 13 Delete the test.jpg object:
 
-```
+
 stack@vlab-XX:~$ swift delete wokrshop test.jpg
 test.jpg
 
 stack@vlab-XX:~$ swift list wokrshop
 test2
-```
+
