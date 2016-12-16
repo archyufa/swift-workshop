@@ -15,6 +15,7 @@ In Select Packages choose
 
 ## Download and install Pip
 wget https://bootstrap.pypa.io/get-pip.py --no-check-certificate
+
 python get-pip.py
 
 ## Intall python swift-client
