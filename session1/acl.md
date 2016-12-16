@@ -40,8 +40,8 @@ swift list
 swift upload --object-name swiftstack.png acltest acl_files/download.png
 ``
 
-### Create READ ACL with capability to list Containers to all reffers for
-"acltest" container.
+### Create READ ACL with capability to list Containers to all reffers for acltest: container.
+
 ``
 swift post -r '.r:*,.rlistings' acltest
 swift stat acltest
