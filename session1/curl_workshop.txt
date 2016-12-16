@@ -1,49 +1,65 @@
-swift -A <AUTH_URL> -U <USERNAME> -K <PASSWORD> stat -v
-
-
 CURL:
-curl -i -H "X-Auth-User: USER" -H "X-Auth-Key: PASSWORD" http://172.16.21.165/auth/v1.0
+curl -i -H "X-Auth-User: USER" -H "X-Auth-Key: PASSWORD"
+http://172.16.21.165/auth/v1.0
 HTTP/1.1 200 OK
 X-Storage-Url: http://172.16.21.165/v1/AUTH_ayrat
 X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26
 
-#Ceate a container:
-curl -X PUT -H "X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26" http://172.16.21.165/v1/AUTH_ayrat/newcontainer
+
+Export:
+http://172.16.21.165/v1/AUTH_ayrat
+export STORAGE_URL=http://172.16.21.165/v1/AUTH_ayrat
+export TOKEN=AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26
+
+
+#Ceate a container with Metadata:
+curl -X PUT -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer -H
+"X-Container-Meta-Book: TomSawyer"
 
 #List all containers in current account:
-curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/
-
-#Uploade a file "file1" to container "newcontainer"
-touch file1
-
-curl -X PUT -T file1 -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/newcontainer
-
-#List all objects in a container:
-curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat
-
-#List all objects in a container that starts with a particular prefix "fi":
-curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/?prefix=fi 
-
-#Download a particular file "file1" from the container "mycontainer":
-curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/file1
-
-#Download file1 and save it locally as localfile1:
-curl -o localfile1 -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/file1
-
-#Delete a container "mycontainer"
-curl -X DELETE -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat
-
-#To delete a specific file "file1" from the container:
-curl -X DELETE -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/file1
+curl -X GET -H "X-Auth-Token: $TOKEN" $STORAGE_URL/
 
 #Get metadata associated with a Swift account:
-curl -v -X HEAD -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://10.80.83.68:8077/v1/AUTH_system/
+curl -v -X HEAD -H "X-Auth-Token: $TOKEN" $STORAGE_URL
 
 #Get metadata associated with a container:
-curl -v -X HEAD -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat
+curl -v -X HEAD -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer
 
-#Request the data from Swift in XML or JSON format by specifying the "format" paramater. This parameter can be applied to any of the above requests. Here are a few examples:
-curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://10.80.83.68:8077/v1/AUTH_system/?format=json
-curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://10.80.83.68:8077/v1/AUTH_system/?format=xml
+#Create and Upload files "file$" to container "newcontainer"
+touch file1
+echo "Chapter 1"
+touch file2
+touch file3
+touch file4
+touch summary
 
-#The above operations can also be done using 'swift' command. For instructions on using 'swift' command, please go to next page.
+curl -X PUT -T file1 -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file1
+curl -X PUT -T file2 -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file2
+curl -X PUT -T file3 -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file3
+curl -X PUT -T file4 -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file4
+curl -X PUT -T summary -H "X-Auth-Token: $TOKEN"
+$STORAGE_URL/newcontainer/summary
+
+#List all objects in a container:
+curl -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer
+
+#List all objects in a container that starts with a particular prefix "fi":
+curl -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/\?prefix\=fi
+
+#Download file1 and save it locally as local file1:
+curl -o file1 -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file1
+cat file1
+
+#Delete a container "newcontainer"
+curl -X DELETE -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer
+
+#To delete a specific file "file1" from the container:
+curl -X DELETE -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file1
+curl -X DELETE -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file2
+curl -X DELETE -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file3
+curl -X DELETE -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/file4
+curl -X DELETE -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer/summary
+
+#Try Delete again "newcontainer"
+curl -X DELETE -H "X-Auth-Token: $TOKEN" $STORAGE_URL/newcontainer
+
