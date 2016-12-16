@@ -29,4 +29,6 @@ In Select Packages choose
 
 ``source .venv/bin/activate``
 
+``sudo pip install --upgrade setuptools``
+
 ``pip install python-openstack-client``
