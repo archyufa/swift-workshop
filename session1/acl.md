@@ -44,21 +44,10 @@ swift upload --object-name swiftstack.png acltest acl_files/download.png
 
 ``
 swift post -r '.r:*,.rlistings' acltest
+``
+
+``
 swift stat acltest
-         Account: AUTH_ayrat
-       Container: acltest
-         Objects: 1
-           Bytes: 3681
-        Read ACL: .r:*,.rlistings
-       Write ACL:
-         Sync To:
-        Sync Key:
-   Accept-Ranges: bytes
-      X-Trans-Id: txb472785086d042d0b62e1-005853eed6
-X-Storage-Policy: east
-   Last-Modified: Fri, 16 Dec 2016 13:40:31 GMT
-     X-Timestamp: 1481895306.82349
-    Content-Type: text/plain; charset=utf-8
 ``
 
 ### Try to list pictures from outside of cluster:
