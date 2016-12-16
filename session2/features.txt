@@ -1,0 +1,136 @@
+1. Large File support:
+
+The test.mov file we have available in the vlab is less than 5 GB of size, but
+we can still upload it to the Object Storage in multiple segments. The size of
+this file is exactly 100 MB, let’s upload it in segments of 10 MB each (10 *
+1024 * 1024 = 10,485,760 bytes).
+
+
+Step 1 Upload the test.mov file in 10 MB segments:
+
+stack@vlab-XX:~$ swift upload --object-name test.mov \
+                 --segment-size 10485760 wokrshop \
+                 test.mov
+test.mov segment 9
+test.mov segment 7
+test.mov segment 6
+test.mov segment 3
+test.mov segment 8
+test.mov segment 1
+test.mov segment 5
+test.mov segment 4
+test.mov segment 2
+test.mov segment 0
+test.mov
+
+Step 2 Let’s look at the current container and objects:
+
+
+stack@vlab-XX:~$ swift list
+wokrshop
+wokrshop_segments
+
+stack@vlab-XX:~$ swift list wokrshop
+test.mov
+test2
+stack@vlab-prime:~$ swift list wokrshop_segments
+test.mov/1407278078.052981/104857600/10485760/00000000
+test.mov/1407278078.052981/104857600/10485760/00000001
+test.mov/1407278078.052981/104857600/10485760/00000002
+test.mov/1407278078.052981/104857600/10485760/00000003
+test.mov/1407278078.052981/104857600/10485760/00000004
+test.mov/1407278078.052981/104857600/10485760/00000005
+test.mov/1407278078.052981/104857600/10485760/00000006
+test.mov/1407278078.052981/104857600/10485760/00000007
+test.mov/1407278078.052981/104857600/10485760/00000008
+test.mov/1407278078.052981/104857600/10485760/00000009
+
+stack@vlab-XX:~$ swift stat wokrshop test.mov
+       Account: AUTH_4552c149d0ae4593b3156645515a9f3e
+     Container: wokrshop
+        Object: test.mov
+  Content Type: video/quicktime
+Content Length: 104857600
+ Last Modified: Mon, 21 Dec 2015 21:40:50 GMT
+          ETag: "38efd411ec12bdd01ecfc6c4cc13caf7"
+      Manifest:
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/
+    Meta Mtime: 1407278078.052981
+ Accept-Ranges: bytes
+        Server: Apache/2.4.7 (Ubuntu)
+   X-Timestamp: 1410316933.60084
+    X-Trans-Id: txd6c8c8d825be4cc58e7c4-00540fbaf1
+
+swift client uses a strict convention for its segmented object support. In the
+example above, it will upload all of the segments into a second container
+named wokrshop_segments. The original container will have an object with the
+Manifest value set to point to the segments location. These segments will have
+names in the format of <name>/<timestamp>/<size>/<segment>. The reason for
+name format is that an upload of a new file with the same name won’t overwrite
+the content of the first until the last moment when the manifest file is
+updated. The ETag property on the manifest file is in quotes and has the
+md5sum value for the original file.
+
+
+Step 3 Download the test.mov object from the wokrshop container and verify
+its size:
+
+
+stack@vlab-XX:~$ swift download wokrshop test.mov
+test.mov [auth 0.251s, headers 0.349s, total 2.991s, 38.281 MB/s]
+
+stack@vlab-XX:~$ du -h -s test.mov
+100M    test.mov
+
+
+You can see that the file was assembled back by swift client.
+
+Step 4 Delete the test.mov object from the wokrshop container:
+
+
+stack@vlab-XX:~$ swift delete wokrshop test.mov
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000008
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000004
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000003
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000002
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000009
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000007
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000001
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000006
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000000
+wokrshop_segments/test.mov/1407278078.052981/104857600/10485760/00000005
+test.mov
+
+stack@vlab-XX:~$ swift list
+wokrshop
+wokrshop_segments
+
+stack@vlab-XX:~$ swift list wokrshop_segments
+
+stack@vlab-XX:~$ swift list wokrshop
+test2
+You can see that all of the segments were deleted, but the container was left
+behind.
+
+
+Step 5 Delete the wokrshop_segments container:
+
+stack@vlab-XX:~$ swift delete wokrshop_segments
+
+stack@vlab-XX:~$ swift list
+wokrshop
+
+
+2. Save versions
+swift post public -m X-Versions-Location:public_versions
+
+3. Expiring objects
+
+# Set a time-to-live when uploading
+# 3600 seconds == 1 hour
+swift upload public data/images/set1/img1.jpg -m X-Delete-After: 3600
+
+# Set an calendar time when the object expires
+# 872838840 == 2:14 AM EST on August 29th, 1997
+swift post public data/images/set1/img2.jpg X-Delete-At: 872838840
+
