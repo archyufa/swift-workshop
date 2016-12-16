@@ -126,12 +126,10 @@ swift post public -m X-Versions-Location:public_versions
 
 3. Expiring objects
 
-# Set a time-to-live when uploading
-# 3600 seconds == 1 hour
+# Set Upload a file
 touch file1
 swift upload public file1
 
-# Set an calendar time when the object expires
-# 872838840 == 2:14 AM EST on August 29th, 1997
-swift post public file1 -m X-Delete-After: 3600
+# Set file to delete after 3600 seconds == 1 hour
+swift post -m "X-Delete-After: 3600" public file1 
 
