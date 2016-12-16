@@ -24,6 +24,9 @@ In Select Packages choose
 
 ##Install Openstack client (Optional)
 ``pip install virtualenv``
+
 ``virtualenv .venv``
+
 ``source .venv/bin/activate``
+
 ``pip install python-openstack-client``
