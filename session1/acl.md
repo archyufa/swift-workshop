@@ -1,3 +1,7 @@
+#ACL Workshop
+
+
+## Recap of class:
 * Account-Level Access Control:
     Read-only
     Read-write
@@ -27,16 +31,15 @@
 * ACLs can be chained (last one wins)
 
 
-Task: Create publicly avaialble contaner with pictures.
+## Task: Create publicly avaialble contaner with pictures.
 
-#Upload download.png to acltest container:
+### Upload download.png to acltest container:
 swift post acltest
 swift list
 swift upload --object-name swiftstack.png acltest acl_files/download.png
 
 
-# Create READ ACL with capability to list Containers to all reffers for
-# "acltest" container.
+### Create READ ACL with capability to list Containers to all reffers for "acltest" container.
 swift post -r '.r:*,.rlistings' acltest
 swift stat acltest
          Account: AUTH_ayrat
@@ -55,9 +58,9 @@ X-Storage-Policy: east
     Content-Type: text/plain; charset=utf-8
 
 
-#Try to list pictures from outside of cluster:
+### Try to list pictures from outside of cluster:
 curl -i http://172.16.21.165/v1/AUTH_ayrat/acltest
 
-# Download image from acltest container:
-wget http://172.16.21.165/v1/AUTH_ayrat/acltest/swiftstack.png
+### Download image from acltest container:
+'''wget http://172.16.21.165/v1/AUTH_ayrat/acltest/swiftstack.png'''
 
