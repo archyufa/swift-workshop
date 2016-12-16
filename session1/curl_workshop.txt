@@ -2,48 +2,48 @@ swift -A <AUTH_URL> -U <USERNAME> -K <PASSWORD> stat -v
 
 
 CURL:
-curl -i -H "X-Auth-User: ayrat" -H "X-Auth-Key: redhat7" http://172.16.21.165/auth/v1.0
+curl -i -H "X-Auth-User: USER" -H "X-Auth-Key: PASSWORD" http://172.16.21.165/auth/v1.0
 HTTP/1.1 200 OK
 X-Storage-Url: http://172.16.21.165/v1/AUTH_ayrat
 X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26
 
-#To create a container:
+#Ceate a container:
 curl -X PUT -H "X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26" http://172.16.21.165/v1/AUTH_ayrat/newcontainer
 
-#To list all containers in current account:
-
+#List all containers in current account:
 curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/
-#Uploading a file "file1" to container "mycontainer"
 
+#Uploade a file "file1" to container "newcontainer"
 touch file1
 
 curl -X PUT -T file1 -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/newcontainer
-#To list all objects in a container:
 
+#List all objects in a container:
 curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat
-#To list all objects in a container that starts with a particular prefix "fi":
 
+#List all objects in a container that starts with a particular prefix "fi":
 curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/?prefix=fi 
-#To download a particular file "file1" from the container "mycontainer":
 
+#Download a particular file "file1" from the container "mycontainer":
 curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/file1
-#To download file1 and save it locally as localfile1:
 
+#Download file1 and save it locally as localfile1:
 curl -o localfile1 -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/file1
-#To delete a container "mycontainer"
 
+#Delete a container "mycontainer"
 curl -X DELETE -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat
+
 #To delete a specific file "file1" from the container:
-
 curl -X DELETE -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat/file1
-#To get metadata associated with a Swift account:
 
+#Get metadata associated with a Swift account:
 curl -v -X HEAD -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://10.80.83.68:8077/v1/AUTH_system/
-#To get metadata associated with a container:
 
+#Get metadata associated with a container:
 curl -v -X HEAD -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://172.16.21.165/v1/AUTH_ayrat
-#You can request the data from Swift in XML or JSON format by specifying the "format" paramater. This parameter can be applied to any of the above requests. Here are a few examples:
 
+#Request the data from Swift in XML or JSON format by specifying the "format" paramater. This parameter can be applied to any of the above requests. Here are a few examples:
 curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://10.80.83.68:8077/v1/AUTH_system/?format=json
 curl -H 'X-Auth-Token: AUTH_tkd15bcfa7a35d4fb6bcddd368aaa4fb26' http://10.80.83.68:8077/v1/AUTH_system/?format=xml
-#The above operations can also be done using 'swift' command. For instructions on using 'swift' command, please refer to "swift --help".
+
+#The above operations can also be done using 'swift' command. For instructions on using 'swift' command, please go to next page.
