@@ -34,12 +34,15 @@
 ## Task: Create publicly avaialble contaner with pictures.
 
 ### Upload download.png to acltest container:
+``
 swift post acltest
 swift list
 swift upload --object-name swiftstack.png acltest acl_files/download.png
+``
 
-
-### Create READ ACL with capability to list Containers to all reffers for "acltest" container.
+### Create READ ACL with capability to list Containers to all reffers for
+"acltest" container.
+``
 swift post -r '.r:*,.rlistings' acltest
 swift stat acltest
          Account: AUTH_ayrat
@@ -56,11 +59,12 @@ X-Storage-Policy: east
    Last-Modified: Fri, 16 Dec 2016 13:40:31 GMT
      X-Timestamp: 1481895306.82349
     Content-Type: text/plain; charset=utf-8
-
+``
 
 ### Try to list pictures from outside of cluster:
+``
 curl -i http://172.16.21.165/v1/AUTH_ayrat/acltest
+``
 
 ### Download image from acltest container:
-'''wget http://172.16.21.165/v1/AUTH_ayrat/acltest/swiftstack.png'''
-
+``wget http://172.16.21.165/v1/AUTH_ayrat/acltest/swiftstack.png``
