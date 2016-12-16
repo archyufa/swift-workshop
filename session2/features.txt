@@ -128,9 +128,10 @@ swift post public -m X-Versions-Location:public_versions
 
 # Set a time-to-live when uploading
 # 3600 seconds == 1 hour
-swift upload public data/images/set1/img1.jpg -m X-Delete-After: 3600
+touch file1
+swift upload public file1
 
 # Set an calendar time when the object expires
 # 872838840 == 2:14 AM EST on August 29th, 1997
-swift post public data/images/set1/img2.jpg X-Delete-At: 872838840
+swift post public file1 -m X-Delete-After: 3600
 
