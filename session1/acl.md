@@ -18,16 +18,11 @@ The later is really cool to configure data access for anyone.
  
  * Referrer:
 
-   * .r:* (all referrers)
- 
+   * .r:* (all referrers) 
    * .r:.allowed.com (only from allowed.com)
-
-   * .r:-.not-allowed.com (not from not-allowed.com)
-  
-   * user1 (give access to the user1 (V1))
-  
-   * user1:tenant1 (give access to the user1 in tenant1 (v2))
-  
+   * .r:-.not-allowed.com (not from not-allowed.com)  
+   * user1 (give access to the user1 (V1))  
+   * user1:tenant1 (give access to the user1 in tenant1 (v2))  
    * tenant1 (give access to the tenant1 (v2))
    
 
