@@ -2,23 +2,25 @@
 
 
 ## Recap of class:
-* Account-Level Access Control:
+
+Account-Level Access Control:
     Read-only
     Read-write
     Admin
 
-* ACLs can be chained (last one wins)
+ACLs can be chained (last one wins)
 
-* Account-Level Access Control:
+Account-Level Access Control:
     Read-only
     Read-write
     Admin
 
-* Container-Level Access Control (ACLs )
+Container-Level Access Control (ACLs )
 
-** Read & Write ACLs, set with swift post -r/-w
+* Read & Write ACLs, set with swift post -r/-w
 
-** Referrer:
+* Referrer:
+
     .r:* (all referrers)
     .r:.allowed.com (only from allowed.com)
     .r:-.not-allowed.com (not from not-allowed.com)
