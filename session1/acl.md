@@ -10,12 +10,9 @@
 * Container-Level Access Control (ACLs )
 ** Read & Write ACLs, set with swift post -r/-w
 ** Referrer:
-
-*** .r:* (all referrers)
-
-*** .r:.allowed.com (only from allowed.com)
-
-*** .r:-.not-allowed.com (not from not-allowed.com)
+    *** .r:* (all referrers)
+    *** .r:.allowed.com (only from allowed.com)
+    *** .r:-.not-allowed.com (not from not-allowed.com)
 
 * ACLs can be chained (last one wins)
 
