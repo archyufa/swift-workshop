@@ -20,16 +20,17 @@ The later is really cool to configure data access for anyone.
 
   * .r:* (all referrers)
  
-  *.r:.allowed.com (only from allowed.com)
+  * .r:.allowed.com (only from allowed.com)
 
   * .r:-.not-allowed.com (not from not-allowed.com)
   
-  * user1
+  * user1 (give access to the user1 (V1))
   
-  * user1:tenant1
+  * user1:tenant1 (give access to the user1 in tenant1 (v2))
+  
+  * tenant1 (give access to the tenant1 (v2))
 
-
-## Task: Create publicly avaialble contaner with pictures.
+## Task 1: Create publicly avaialble contaner with pictures.
 
 ### Upload download.png to acltest container:
 ``
@@ -55,3 +56,6 @@ curl -i http://172.16.21.165/v1/AUTH_ayrat/acltest
 
 ### Download image from acltest container:
 ``wget http://172.16.21.165/v1/AUTH_ayrat/acltest/swiftstack.png``
+
+## Task 2: Create publicly avaialble contaner with pictures.
+
