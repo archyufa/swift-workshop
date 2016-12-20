@@ -29,13 +29,13 @@ The later is really cool to configure data access for anyone.
  
   * Keystone related:
   
-   * <project-id>:<user-id>
+   * ``<project-id>:<user-id>``
    
-   * <project-id>:*
+   * ``<project-id>:*``
    
-   * *:<user-id>	
+   * ``*:<user-id>``
    
-   * *:*
+   * ``*:*``
 
 **Note:** Keystone project (tenant) or user names (i.e., <project-name>:<user-name) must no longer be used because with the introduction of domains in Keystone, names are not globally unique. You should use user and project ids instead.
 
