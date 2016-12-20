@@ -17,18 +17,27 @@ The later is really cool to configure data access for anyone.
  * Read & Write ACLs, set with swift post -r/-w
  
  * Referrer:
+ 
+  * Common: 
 
    * .r:* (all referrers)
    
-   * .r:.allowed.com (only from allowed.com)
+   * .r:.allowed.com (Allowed only from allowed.com Domain)
    
-   * .r:-.not-allowed.com (not from not-allowed.com)
+   * .r:-.not-allowed.com (not allowed from not-allowed.com Domain)
    
-   * demo1 (give access to the user1 (V1))
+ 
+  * Keystone related:
+  
+   * <project-id>:<user-id>
    
-   * demo1:testtenant (give access to the user1 in tenant1 (v2))
+   * <project-id>:*
    
-   * testtenant (give access to the tenant1 (v2))
+   * *:<user-id>	
+   
+   * *:*
+
+**Note:** Keystone project (tenant) or user names (i.e., <project-name>:<user-name) must no longer be used because with the introduction of domains in Keystone, names are not globally unique. You should use user and project ids instead.
 
 ### Prerequisite: Setup 2 users and 1 tenant in keystone.
 In Keystone create a user ``demo1`` and ``demo2`` in ``testtenant`` tenant.
