@@ -56,6 +56,7 @@ Or alternatively use ``openstack`` API client in keys using Keystone V3.
 **Action:**
 
 ``swift post -r 'demo2:tenant1' acltest``
+
 ``swift post -w 'demo2:tenant1' acltest``
 
 **Result:**
@@ -63,6 +64,7 @@ Or alternatively use ``openstack`` API client in keys using Keystone V3.
 Demouser2 is now able to download, upload, stat and list the container acltest:
 
 ``source demo1rc``
+
 ``swift stat acltest``
 
 ### Task 1: Create read/write access to the all users in tenant1.
@@ -70,6 +72,7 @@ Demouser2 is now able to download, upload, stat and list the container acltest:
 **Action:**
 
 ``swift post -r '*:tenant1' acltest``
+
 ``swift post -w '*:tenant1' acltest``
 
 **Result:**
@@ -113,5 +116,6 @@ You can now download, list and see stat of container:
 ### Task X: Give r/w access every version of my account/tenant, to user leslie in
 project Gamma. Give read-only access to user joebob in project Beta and everyone in project Gamm.
 swift post -r '*:memyself,Beta:joebob,Beta:leslie,Gamma:*' AlphaContainer
+
 swift post -w '*:memyself,Gamma:leslie' AlphaContainer
 
