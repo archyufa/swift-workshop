@@ -3,31 +3,30 @@
 
 ## Recap of class:
 
-Account-Level Access Control:
-    Read-only
-    Read-write
-    Admin
+The ACL let the account (or tenant) owner set R/W access rights for authenticated users or even unauthenticated access.
+The later is really cool to configure data access for anyone.
 
-ACLs can be chained (last one wins)
+* Account-Level Access Control:
 
-Account-Level Access Control:
-    Read-only
-    Read-write
-    Admin
+ * Read-only
+ * Read-write
+ * Admin
 
-Container-Level Access Control (ACLs )
+* Container-Level Access Control (ACLs )
 
-* Read & Write ACLs, set with swift post -r/-w
+ * Read & Write ACLs, set with swift post -r/-w
+ 
+ * Referrer:
 
-* Referrer:
+  * .r:* (all referrers)
+ 
+  *.r:.allowed.com (only from allowed.com)
 
-** .r:* (all referrers)
-
-**.r:.allowed.com (only from allowed.com)
-
-** .r:-.not-allowed.com (not from not-allowed.com)
-
-* ACLs can be chained (last one wins)
+  * .r:-.not-allowed.com (not from not-allowed.com)
+  
+  * user1
+  
+  * user1:tenant1
 
 
 ## Task: Create publicly avaialble contaner with pictures.
