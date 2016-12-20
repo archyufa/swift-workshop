@@ -29,6 +29,7 @@ The later is really cool to configure data access for anyone.
    * user1:tenant1 (give access to the user1 in tenant1 (v2))
   
    * tenant1 (give access to the tenant1 (v2))
+   
 
 ## Task 1: Create publicly avaialble contaner with pictures.
 
