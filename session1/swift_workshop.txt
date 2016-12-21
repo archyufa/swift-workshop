@@ -112,8 +112,7 @@ specified in the command.
 Step 8 Upload the same file with a different name:
 
 
-stack@vlab-XX:~$ swift upload --object-name test2 \
-                 wokrshop test.jpg
+stack@vlab-XX:~$ swift upload --object-name test2 wokrshop test.jpg
 test2
 
 stack@vlab-XX:~$ swift stat --lh wokrshop test2
@@ -146,28 +145,23 @@ Try uploading test.doc and “path:test.xls to wokrshop container.
 Step 10 Download the test.jpg object and verify its md5sum value:
 
 
-
 stack@vlab-XX:~$ swift download wokrshop test.jpg
 test.jpg [auth 0.306s, headers 0.386s, total 0.387s, 0.161 MB/s]
-
 
 
 stack@vlab-XX:~$ ls -l test.jpg
 -rw-rw-r-- 1 stack stack 12965 Dec  15 17:06 test.jpg
 
 
-
 stack@vlab-XX:~$ md5sum test.jpg
 6b154f05bc17cf39a481946b3eeb86a4  test.jpg
-
 
 Run swift download --help command to find more optional arguments for
 downloading objects with swift client.
 
 Step 11 Add metadata to the test.jpg object:
 
-
-stack@vlab-XX:~$ swift post --meta Genre:Comedy wokrshop test.jpg
+stack@vlab-XX:~$ swift post --meta Genre:Drama wokrshop test.jpg
 
 stack@vlab-XX:~$ swift stat wokrshop test.jpg
        Account: AUTH_4552c149d0ae4593b3156645515a9f3e
@@ -177,7 +171,7 @@ stack@vlab-XX:~$ swift stat wokrshop test.jpg
 Content Length: 12965
  Last Modified: Mon, 21 Dec 2015 21:32:05 GMT
           ETag: 6b154f05bc17cf39a481946b3eeb86a4
-    Meta Genre: Comedy
+    Meta Genre: Drama
  Accept-Ranges: bytes
         Server: Apache/2.4.7 (Ubuntu)
    X-Timestamp: 1410314004.32607
