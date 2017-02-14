@@ -3,11 +3,10 @@
 ##ACL
 
 ** Please note: ** that ACL applied on Container level and not per object!
+
 ### Create Publicly readable Container
 
-The following allows anybody to upload or download objects. However, to
-download an object, the exact name of the object must be known since users
-cannot list the objects in the container.
+Prepare files:
 
 ```
 echo "some text" > 1.txt
@@ -20,6 +19,11 @@ Create read-only ACL for container:
 ```
 swift post pictures -r ".r:*"
 ```
+
+This allows anybody to download the objects inside container.
+However, to download an object, the exact URL path to object needs to be known,
+since user cannot list the objects in the container.
+
 
 Verify Read ACL:
 
@@ -45,7 +49,7 @@ Try the link in the browser:
 http://swiftstack-objects.staging.cloud.ca/v1/AUTH_ayrat/text
 ```
 
-Result: Unauthorized
+__Result: Unauthorized__
 
 Try the link for container + object (StorageURL/Container_name/Object):
 
@@ -53,7 +57,7 @@ Try the link for container + object (StorageURL/Container_name/Object):
 http://swiftstack-objects.staging.cloud.ca/v1/AUTH_ayrat/text/1.txt
 ```
 
-Result: Success
+__Result: Success__
 
 ### Create Publicly browsable file in swift:
 
@@ -72,10 +76,11 @@ swift post text -r ".r:*,.rlistings"
 http://swiftstack-objects.staging.cloud.ca/v1/AUTH_ayrat/text
 ```
 
+__Result: Success__
 
-Result: Success
 
-### ACL with Keystone related:
+
+## ACL with Keystone:
 
 ```
 -r
@@ -85,11 +90,114 @@ Result: Success
 *:*
 ```
 
-** Create file that shared with tenant or user in tenant
+### Create 2 demo users and 2 demo projects and add swiftoperator role:
+
+** Using openstack api: **
+
+```
+openstack project create demoproject1
+openstack project create demoproject2
+openstack user create --project demoproject1 --password nova demo2
+openstack user create --project demoproject2 --password nova demo2
+openstack role list # List all roles and locate swiftoperator or swiftuser role.
+openstack user-role-add --user demo1 swiftoperator
+openstack user-role-add --user demo2 swiftoperator
+```
+
+** Using keystone api: **
+
+```
+keystone tenant-create --name demoproject1
+keystone tenant-create --name demoproject2
+keystone user-create --tenant demoproject1 --name demo1 --pass nova
+keystone user-create --tenant demoproject2 --name demo2 --pass nova
+keystoner role list  # List all roles and locate swiftoperator or swiftuser role.
+keystone user-role-add --user demo1 --role swiftoperator
+keystone user-role-add --user demo2 --role swiftoperator
+```
+
+### Create file in demorproject1 with user demo1
+
+```
+source demo1rc
+echo "This is ACL test with keystone" > acltest.txt
+swift post aclcontainer
+swift list
+swift upload --object-name acltest.txt aclcontainer acltest.txt
+swift stat -v # Note the Storage URL path for this object
+```
+
+### Test that user demo2 in demoproject2 cannot access the file:
+
+Switch to demo2 user and fetch the X-Auth-Token:
+
+```
+swift stat -v
+```
+
+Try access the file with StorageURL of shared object and token with demo2 user.
+
+```
+curl -i <StorageURL+container>/container/object>  -H "X-Auth-Token: "
+
+or 
+
+swift download aclcontainer acltest.txt --os-storage-url <STORAGE_URL_PATH>
+
+```
+
+__Result: Failed__
+
+### Share aclcontainer with demoproject2/demo2 in tenant both wrights and reads:
+
+```
+swift post -r 'demoproject2:demo2' aclcontainer
+swift post -w 'demoproject2:demo2' aclcontainer
+```
+
+Try access the file with StorageURL of shared object and token with demo2 user.
+
+```
+export OS_USERNAME=demo2
+export OS_TENANT_NAME=demoproject2
+export OS_PASSWORD=nova
+export OS_AUTH_URL=http://openstack.domain.com:5000/v2.0
+swift download aclcontainer acltest.txt --os-storage-url <STORAGE_URL_PATH>
+```
+
+_OR using Curl_
+```
+curl -i <StorageURL+container>/container/object>  -H "X-Auth-Token: "
+
+```
+
+__Result: Success__
+
+
+### You can simplify access to the shared container by adding STORAGE_URL to the 
+openrc file.
+
+```
+export OS_STORAGE_URL="http://openstack.domain.com:8080/v1/AUTH_e2e476b96336840e5f82f928a815805d"
+swift list aclcontainer
+swift download aclcontainer 
+```
+
+## A complex ACL set
+
+More complex Swift ACLs can be constructed with wildcards and comma-separated lists.
+
+```
+# give r/w access every version of my account and to user leslie in
+# project Gamma. give read-only access to user joebob in project
+# Beta and everyone in project Gamma
+swift post -r '*:memyself,Beta:joebob,Beta:leslie,Gamma:*' AlphaContainer
+swift post -w '*:memyself,Gamma:leslie' AlphaContainer
+```
 
 
 
-
+# TempURL
 
 ## Make a Tempurl of image/document/template.
 
