@@ -17,7 +17,7 @@ swift upload --object-name 1.txt text 1.txt
 Create read-only ACL for container:
 
 ```
-swift post pictures -r ".r:*"
+swift post text -r ".r:*"
 ```
 
 This allows anybody to download the objects inside container.
